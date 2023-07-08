@@ -28,7 +28,7 @@ actual class ProgressWindow actual constructor(title: String) {
                 error("Failed to register window class.")
             }
             hwnd = CreateWindowExA(
-                WS_EX_CLIENTEDGE,
+                WS_EX_CLIENTEDGE.toUInt(),
                 className,
                 title,
                 (WS_OVERLAPPEDWINDOW xor WS_THICKFRAME xor WS_MAXIMIZEBOX).toUInt(),
@@ -44,7 +44,7 @@ actual class ProgressWindow actual constructor(title: String) {
             val clientRect = alloc<RECT>()
             check(GetClientRect(hwnd, clientRect.ptr) == TRUE) { "Failed to get window client area." }
             hProgressCtrl = CreateWindowExA(
-                0,
+                0u,
                 PROGRESS_CLASSA,
                 "",
                 (WS_CHILD or WS_VISIBLE or PBS_SMOOTH).toUInt(),
@@ -57,7 +57,7 @@ actual class ProgressWindow actual constructor(title: String) {
                 hInstance,
                 null,
             )
-            SendMessageA(hProgressCtrl, PBM_SETSTEP, 1, 0)
+            SendMessageA(hProgressCtrl, PBM_SETSTEP.toUInt(), 1u, 0)
         }
     }
 
@@ -66,15 +66,15 @@ actual class ProgressWindow actual constructor(title: String) {
     }
 
     actual fun setProgress(progress: Int) {
-        SendMessageA(hProgressCtrl, PBM_SETPOS, progress.toULong(), 0)
+        SendMessageA(hProgressCtrl, PBM_SETPOS.toUInt(), progress.toULong(), 0)
     }
 
     actual fun setProgressTotal(total: Int) {
-        SendMessageA(hProgressCtrl, PBM_SETRANGE32, 0, total.toLong())
+        SendMessageA(hProgressCtrl, PBM_SETRANGE32.toUInt(), 0u, total.toLong())
     }
 
     actual fun stepProgress() {
-        SendMessageA(hProgressCtrl, PBM_STEPIT, 0, 0)
+        SendMessageA(hProgressCtrl, PBM_STEPIT.toUInt(), 0u, 0)
     }
 
     actual fun showAndWait(): Unit = memScoped {
